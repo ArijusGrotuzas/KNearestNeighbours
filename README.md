@@ -1,1 +1,1 @@
-# KNearestNeighbours
+# K Nearest Neighbours classifier
