@@ -42,7 +42,16 @@ int KNearestNeighbourClass(point arr[], int len, int k, point p){
 
 int main()
 {
-    //srand(time(0));
+    printf("The K-Nearest Neighbors classifier classifies a single input point to a random dataset.\nEnter an x value for point p...\n");
+    int x, y;
+
+    cin >> x;
+
+    printf("Enter Enter an y value for point p...\n");
+
+    cin >> y;
+
+    srand(time(0));
 
     int len = 10;
 
@@ -59,7 +68,7 @@ int main()
     }
 
     // Create a point to classify
-    point p = {5, 4};
+    point p = {x, y};
 
-    printf("The value of new point: %d.\n", KNearestNeighbourClass(data, len, 3, p));
+    printf("The class of new point: %d.\n", KNearestNeighbourClass(data, len, 3, p));
 }
