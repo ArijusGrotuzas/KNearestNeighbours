@@ -1,4 +1,12 @@
 # depslib dependency file v1.0
-1640544489 source:c:\users\tamst\documents\knearestneighbours\main.cpp
+1640696485 source:c:\users\tamst\documents\knearestneighbours\main.cpp
 	<bits/stdc++.h>
+	<vector>
+	<string>
+	<sstream>
+
+1640555677 c:\program files\development\graphics\include\graphics.h
+	<windows.h>
+	<limits.h>
+	<sstream>
 
