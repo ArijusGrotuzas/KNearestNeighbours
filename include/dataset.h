@@ -1,13 +1,12 @@
 #ifndef DATASET_H
 #define DATASET_H
-#include <vector>
-#include <string>
-#include <sstream>
 
 using namespace std;
 
 struct point{
-    double x, y, label, distance;
+    vector<double> features;
+    int label;
+    double distance;
 };
 
 int getLineNum(string filename){
@@ -89,6 +88,12 @@ inline void dataset::readDataset()
             // Add columns to a point structure
             for(int i = 0; i < row.size(); i++){
 
+                p.features.push_back(stod(row[i]));
+
+                if (i == row.size() - 1){
+                    p.label = stoi(row[i]);
+                }
+                /*
                 switch(i){
                 case 0:
                     p.x = stod(row[i]);
@@ -99,7 +104,7 @@ inline void dataset::readDataset()
                 case 2:
                     p.label = stod(row[i]);
                     break;
-                }
+                }*/
             }
 
             data.push_back(p);
@@ -118,7 +123,13 @@ inline void dataset::printDataset(int rows){
     }
 
     for (int i = 0; i < rows; i++){
-        cout << "Feature X: " << data[i].x << ", Feature Y: " << data[i].y << ", Class: " << data[i].label << endl;
+        vector<double> temp = data[i].features;
+
+        for(int j = 0; j < temp.size(); j++){
+            cout << temp[j] << ", ";
+        }
+
+        cout << endl;
     }
 
     cout << endl;

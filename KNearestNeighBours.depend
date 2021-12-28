@@ -1,15 +1,13 @@
 # depslib dependency file v1.0
-1640712215 source:c:\users\tamst\documents\knearestneighbours\main.cpp
+1640725626 source:c:\users\tamst\documents\knearestneighbours\main.cpp
 	<bits/stdc++.h>
 	<dataset.h>
+	<math.h>
 
 1640555677 c:\program files\development\graphics\include\graphics.h
 	<windows.h>
 	<limits.h>
 	<sstream>
 
-1640712241 c:\users\tamst\documents\knearestneighbours\include\dataset.h
-	<vector>
-	<string>
-	<sstream>
+1640723224 c:\users\tamst\documents\knearestneighbours\include\dataset.h
 
