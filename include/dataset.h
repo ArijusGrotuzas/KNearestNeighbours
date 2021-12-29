@@ -34,10 +34,11 @@ class dataset
     private:
         string filename;
         int lenght;
+        bool readClassValues;
         vector<point> data;
 
     public:
-        dataset(string filenamem);
+        dataset(string filenamem, bool readClassValues);
 
         inline void readDataset();
 
@@ -48,8 +49,9 @@ class dataset
         inline vector<point> getData();
 };
 
-dataset::dataset(string filename){
+dataset::dataset(string filename, bool readClassValues=true){
     this->filename = filename;
+    this->readClassValues = readClassValues;
     lenght = getLineNum(filename);
 }
 
@@ -87,24 +89,12 @@ inline void dataset::readDataset()
 
             // Add columns to a point structure
             for(int i = 0; i < row.size(); i++){
-
-                p.features.push_back(stod(row[i]));
-
-                if (i == row.size() - 1){
+                if (i == row.size() - 1 && readClassValues){
                     p.label = stoi(row[i]);
                 }
-                /*
-                switch(i){
-                case 0:
-                    p.x = stod(row[i]);
-                    break;
-                case 1:
-                    p.y = stod(row[i]);
-                    break;
-                case 2:
-                    p.label = stod(row[i]);
-                    break;
-                }*/
+                else if (i < row.size() - 1){
+                    p.features.push_back(stod(row[i]));
+                }
             }
 
             data.push_back(p);
@@ -129,7 +119,12 @@ inline void dataset::printDataset(int rows){
             cout << temp[j] << ", ";
         }
 
-        cout << endl;
+        if (readClassValues){
+            cout << data[i].label << endl;
+        }
+        else{
+            cout << endl;
+        }
     }
 
     cout << endl;
