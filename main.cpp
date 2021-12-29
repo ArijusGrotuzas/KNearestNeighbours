@@ -63,47 +63,48 @@ int KNearestNeighbourClass(vector<point> arr, int classNum, int k, point p){
 
     // Calculate the class frequencies in neighbors
     for (int i = 0; i < k; i++){
-        if (arr[i].label == i){
-            classFrequencies[i]+=1;
-        }
+        classFrequencies[arr[i].label] += 1;
     }
 
     int2 largest = largestInt(classFrequencies, classNum);
 
-    // Return the class value of highest frequency
     return largest.y;
+}
+
+// Classify multiple instances
+void classifyKNN(vector<point> train, vector<point> test, int neighbours){
+    for (int i = 0; i < test.size(); i ++){
+        cout << "New point's class value: " << KNearestNeighbourClass(train, 3, neighbours, test[i]) << endl;
+    }
 }
 
 int main()
 {
     // Specify the dataset file
-    string filename = "Raisin_Dataset.csv";
+    string trainFilename = "iris_train.csv";
+    string testFilename = "iris_test.csv";
 
     // Specify the filename, and optional argument of reading class values
-    dataset frame(filename);
+    dataset train(trainFilename);
+    dataset test(testFilename, false);
 
-    int len = frame.getLenght();
-
+    int len = train.getLenght();
     printf("Number of instances: %d \n", len);
     cout << endl;
 
     // Read the lines in the csv file
-    frame.readDataset();
+    train.readDataset();
+    test.readDataset();
 
     // Print n number of entries in the dataset
-    frame.printDataset(FEW);
+    train.printDataset(FEW);
     cout << endl;
 
     // Get the data
-    vector<point> data = frame.getData();
+    vector<point> trainData = train.getData();
+    vector<point> testData = test.getData();
 
-    // A set of test features, the real class value is 1
-    vector<double> t = {85609, 512.0817743, 215.2719758, 0.907345395, 89197, 0.632019963, 1272.862};
-
-    // Classify the point to one of the two classes
-    point test = {t};
-
-    printf("New point's class value: %d", KNearestNeighbourClass(data, 2, 3, test));
+    classifyKNN(trainData, testData, 10);
 
     return 0;
 }
