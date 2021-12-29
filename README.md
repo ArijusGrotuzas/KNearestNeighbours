@@ -1,6 +1,6 @@
 # K-Nearest Neighbours classifier
 
-K-Nearest Neighbours classifier that classifies only two classes.
+K-Nearest Neighbours classifier implemented in `C++`.
 
 ```c++
 // Classify a point as either belonging to class 1 or class 0
