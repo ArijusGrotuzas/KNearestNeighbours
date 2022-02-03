@@ -5,40 +5,25 @@ using namespace std;
 
 struct point{
     vector<double> features;
-    int label;
+    int label, entry;
     double distance;
+
+    point() :
+        label(0),
+        entry(0),
+        distance (__DBL_MAX__) {}
 };
-
-int getLineNum(string filename){
-    fstream file;
-
-    file.open(filename, ios::in);
-
-    string temp;
-    int num = 0;
-
-    if(file.is_open()){
-
-        while(getline(file, temp)){
-            num++;
-        }
-
-        file.close();
-    }
-
-    return num;
-}
 
 class dataset
 {
     private:
         string filename;
-        int lenght;
+        int lenght, classNum;
         bool readClassValues;
         vector<point> data;
 
     public:
-        dataset(string filenamem, bool readClassValues);
+        dataset(string filename, bool readClassValues);
 
         inline void readDataset();
 
@@ -46,13 +31,15 @@ class dataset
 
         inline int getLenght();
 
-        inline vector<point> getData();
+        inline int getClassNum();
+
+        inline vector<point>* getData();
 };
 
 dataset::dataset(string filename, bool readClassValues=true){
     this->filename = filename;
     this->readClassValues = readClassValues;
-    lenght = getLineNum(filename);
+    lenght = 0;
 }
 
 inline void dataset::readDataset()
@@ -68,7 +55,7 @@ inline void dataset::readDataset()
     {
         vector<string> row;
         string line, word, temp;
-        int num = 0;
+        int num = 0, maxClassVal = 0;
 
         // Get each line of the csv file
         while(getline(file, line)){
@@ -88,14 +75,20 @@ inline void dataset::readDataset()
             point p;
 
             // Add columns to a point structure
-            for(int i = 0; i < row.size(); i++){
+            for(int i = 0; i < int(row.size()); i++){
                 if (i == row.size() - 1 && readClassValues){
                     p.label = stoi(row[i]);
+                    if (p.label > maxClassVal){
+                        maxClassVal = p.label;
+                    }
+
                 }
                 else if (i < row.size() - 1){
                     p.features.push_back(stod(row[i]));
                 }
             }
+
+            p.entry = num;
 
             data.push_back(p);
             num++;
@@ -103,6 +96,8 @@ inline void dataset::readDataset()
 
         // Close the file
         file.close();
+        lenght = num;
+        classNum = maxClassVal + 1;
     }
 }
 
@@ -115,12 +110,12 @@ inline void dataset::printDataset(int rows){
     for (int i = 0; i < rows; i++){
         vector<double> temp = data[i].features;
 
-        for(int j = 0; j < temp.size(); j++){
+        for(int j = 0; j < int(temp.size()); j++){
             cout << temp[j] << ", ";
         }
 
         if (readClassValues){
-            cout << data[i].label << endl;
+            cout << "label: " <<data[i].label << endl;
         }
         else{
             cout << endl;
@@ -134,9 +129,13 @@ inline int dataset::getLenght(){
     return lenght;
 };
 
-inline vector<point> dataset::getData(){
+inline int dataset::getClassNum(){
+    return classNum;
+};
 
-    return data;
+inline vector<point>* dataset::getData(){
+
+    return &data;
 };
 
 #endif // DATASET_H

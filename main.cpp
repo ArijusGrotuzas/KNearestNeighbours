@@ -6,13 +6,8 @@
 #define SOME 50
 #define MANY 100
 
-// Structure for returning largest integer and it's position in the array
-struct int2{
-    int x, y;
-};
-
 // Find the largest integer in the array
-int2 largestInt (int arr[], int len){
+int largestInt (int arr[], int len){
     int largest = 0, pos = 0;
 
     for(int i = 0; i < len; i++){
@@ -22,9 +17,7 @@ int2 largestInt (int arr[], int len){
         }
     }
 
-    int2 result = {largest, pos};
-
-    return result;
+    return pos;
 }
 
 // Compare two points based on their distances
@@ -48,32 +41,35 @@ double EuclideanDistance(vector<double> a, vector<double> b){
 }
 
 // Classify a point as either belonging to class 1 or class 0
-int KNearestNeighbourClass(vector<point> arr, int classNum, int k, point p){
+int KNearestNeighbourClass(vector<point>* arr, int classNum, int k, point test){
 
     // Calculate the distance from a given point and each point in the dataset
-    for (int i = 0; i < arr.size(); i ++)
-        arr[i].distance = EuclideanDistance(arr[i].features, p.features);
+    for (vector<point>::iterator i = arr->begin(); i != arr->end(); ++i){
+        point p = *i;
+        p.distance = EuclideanDistance(p.features, test.features);
+        *i = p;
+    }
 
     // Sort points array based on the distance
-    sort(arr.begin(), arr.end(), compareDistance);
+    sort(arr->begin(), arr->end(), compareDistance);
 
     // Array for class freq
     int classFrequencies[classNum] = {};
 
     // Calculate the class frequencies in neighbors
-    for (int i = 0; i < k; i++){
-        classFrequencies[arr[i].label] += 1;
+    for (vector<point>::iterator i = arr->begin(); i != arr->begin() + k; i++){
+        point p = *i;
+        classFrequencies[p.label] += 1;
     }
 
-    int2 largest = largestInt(classFrequencies, classNum);
-
-    return largest.y;
+    return largestInt(classFrequencies, classNum);
 }
 
 // Classify multiple instances
-void classifyKNN(vector<point> train, vector<point> test, int neighbours){
-    for (int i = 0; i < test.size(); i ++){
-        cout << "New point's class value: " << KNearestNeighbourClass(train, 3, neighbours, test[i]) << endl;
+void classifyKNN(vector<point>* train, vector<point>* test, int neighbours, int classNum){
+    for (vector<point>::iterator i = test->begin(); i != test->end(); ++i){
+        point p = *i;
+        cout << "New point's class value: " << KNearestNeighbourClass(train, classNum, neighbours, p) << endl;
     }
 }
 
@@ -87,23 +83,19 @@ int main()
     dataset train(trainFilename);
     dataset test(testFilename, false);
 
-    int len = train.getLenght();
-    printf("Number of instances: %d \n", len);
-    cout << endl;
-
     // Read the lines in the csv file
     train.readDataset();
     test.readDataset();
+
+    // Print the number of instances in the training dataset
+    printf("Number of instances: %d \n", train.getLenght());
+    cout << endl;
 
     // Print n number of entries in the dataset
     train.printDataset(FEW);
     cout << endl;
 
-    // Get the data
-    vector<point> trainData = train.getData();
-    vector<point> testData = test.getData();
-
-    classifyKNN(trainData, testData, 10);
+    classifyKNN(train.getData(), test.getData(), 10, train.getClassNum());
 
     return 0;
 }
